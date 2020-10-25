@@ -1,0 +1,31 @@
+menu "LIMITZ Radio"
+	config LMTZ_RC_CHANNEL
+	int "Channel"
+	default 1
+	range 1 13
+
+	config LMTZ_RC_PACKET_PAYLOAD_SIZE
+	int "Packet payload capacity"
+	default 128
+	range 16 224
+
+	config LMTZ_RC_LONGRANGE
+	bool "Enable long range"
+	default y
+	help
+		When enabled, the PHY rate of ESP32 will be 512Kbps or 256Kbps
+
+	config LMTZ_RC_PMK
+	string "Primary master key (must be 16 chars long)"
+	default "LMTZPMK_01234567"
+
+	config LMTZ_RC_LMK
+	string "Local master key (must be 16 chars long)"
+	default "LMTZLMK_01234567"
+
+	config LMTZ_RC_PACKET_QUEUE_LEN
+	int "RX Packet queue size"
+	default 10
+	
+endmenu
+
