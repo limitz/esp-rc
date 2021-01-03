@@ -29,3 +29,383 @@ menu "LIMITZ Radio"
 	
 endmenu
 
+menu "LIMITZ analog servo"
+
+
+	# SERVO 1
+	config LMTZ_SERVO1
+		bool
+		prompt "Enable servo 1"
+		default n
+	
+	menu "Configuration"
+		depends on LMTZ_SERVO1
+
+		config LMTZ_SERVO1_PIN
+			int
+			prompt "GPIO pin"
+			default 17
+	
+		config LMTZ_SERVO1_MIN_INPUT
+			int 
+			prompt "Minimum input value"
+			default -1000
+
+		config LMTZ_SERVO1_MAX_INPUT
+			int
+			prompt "Maximum input value"
+			default 1000
+
+		config LMTZ_SERVO1_CHANNEL
+			int
+			prompt "LEDC Channel" 
+			default 0
+
+		config LMTZ_SERVO1_MIN_VALUE
+			int
+			prompt "Min period in us"
+			default 500 
+		
+		config LMTZ_SERVO1_MAX_VALUE
+			int
+			prompt "Max period in us"
+			default 2500
+	endmenu
+	# SERVO 2
+	config LMTZ_SERVO2
+		bool
+		prompt "Enable servo 2"
+		default n
+	
+	menu "Configuration"
+		depends on LMTZ_SERVO2
+
+		config LMTZ_SERVO2_PIN
+			int
+			prompt "GPIO pin"
+			default 18
+	
+		config LMTZ_SERVO2_MIN_INPUT
+			int 
+			prompt "Minimum input value"
+			default -1000
+
+		config LMTZ_SERVO2_MAX_INPUT
+			int
+			prompt "Maximum input value"
+			default 1000
+
+		config LMTZ_SERVO2_CHANNEL
+			int
+			prompt "LEDC Channel" 
+			default 0
+
+		config LMTZ_SERVO2_MIN_VALUE
+			int
+			prompt "Min period in us"
+			default 500 
+		
+		config LMTZ_SERVO2_MAX_VALUE
+			int
+			prompt "Max period in us"
+			default 2500
+	endmenu
+endmenu
+menu "LIMITZ ADC"
+
+	# ADC1
+	config LMTZ_ADC1
+		bool
+		prompt "Enable Battery Monitor"
+		default n
+	
+		menuconfig LMTZ_ADC1_HAS_PIN_EN
+			depends on LMTZ_ADC1
+			prompt "Is the ADC enabled by setting a specific pin?"
+			bool
+			help
+				TTGO uses pin 14
+			default n
+
+		config LMTZ_ADC1_PIN_EN
+			depends on LMTZ_ADC1_HAS_PIN_EN
+			prompt "Pin that enables the ADC"
+			int
+			range 0 33
+			default 14
+
+		config LMTZ_ADC1_PIN_EN_LEVEL
+			depends on LMTZ_ADC1_HAS_PIN_EN
+			prompt "Pin enables the ADC with level high"
+			bool
+			default y
+		choice LMTZ_ADC1_TYPE
+			depends on LMTZ_ADC1
+			prompt "Battery type"
+			default LMTZ_ADC1_TYPE_LIPO
+			
+			config LMTZ_ADC1_TYPE_LIPO
+			bool "LiPo 3.7V"
+
+			config LMTZ_ADC1_TYPE_LIPO
+			bool "Li-Ion 18650 3.6V"
+			
+			config LMTZ_ADC1_TYPE_COIN
+			bool "Coin cell 3V"
+
+		endchoice
+
+		choice LMTZ_ADC1_CHANNEL_SELECT
+			depends on LMTZ_ADC1
+			prompt "Channel"
+			default LMTZ_ADC1_CHANNEL0
+
+			config LMTZ_ADC1_CHANNEL0
+			bool "Channel 0, pin 36"
+
+			config LMTZ_ADC1_CHANNEL1
+			bool "Channel 1, pin 37"
+
+			config LMTZ_ADC1_CHANNEL2
+			bool "Channel 2, pin 38"
+
+			config LMTZ_ADC1_CHANNEL3
+			bool "Channel 3, pin 39"
+
+			config LMTZ_ADC1_CHANNEL4
+			bool "Channel 4, pin 32"
+
+			config LMTZ_ADC1_CHANNEL5
+			bool "Channel 5, pin 33"
+
+			config LMTZ_ADC1_CHANNEL6
+			bool "Channel 6, pin 34"
+
+			config LMTZ_ADC1_CHANNEL7
+			bool "Channel 7, pin 35"
+
+		endchoice
+
+		choice LMTZ_ADC1_WINDOW_SELECT
+			depends on LMTZ_ADC1
+			prompt "Window mode"
+			default LMTZ_ADC1_WINDOW16
+
+			config LMTZ_ADC1_WINDOW0
+			bool "No sliding window"
+
+			config LMTZ_ADC1_WINDOW4
+			bool "Sliding window (4)"
+
+			config LMTZ_ADC1_WINDOW16
+			bool "Sliding window (16)"
+			
+			config LMTZ_ADC1_WINDOW32
+			bool "Sliding window (32)"
+
+			config LMTZ_ADC1_WINDOW64
+			bool "Sliding window (64)"
+		endchoice
+
+	
+
+
+		config LMTZ_ADC1_TYPE
+			depends on LMTZ_ADC1
+			int
+			default   0 if LMTZ_ADC1_TYPE_GENERIC
+			default 100 if LMTZ_ADC1_TYPE_ADC1
+			default 121 if LMTZ_ADC1_TYPE_JOY_X
+			default 122 if LMTZ_ADC1_TYPE_JOY_Y
+
+		config LMTZ_ADC1_WINDOW_SIZE
+			depends on LMTZ_ADC1
+			int
+			default 0 if LMTZ_ADC1_WINDOW0
+			default 4 if LMTZ_ADC1_WINDOW4
+			default 16 if LMTZ_ADC1_WINDOW16
+			default 32 if LMTZ_ADC1_WINDOW32
+			default 64 if LMTZ_ADC1_WINDOW64
+			default 16
+
+		config LMTZ_ADC1_CHANNEL
+			depends on LMTZ_ADC1
+			int
+			default 0 if LMTZ_ADC1_CHANNEL0
+			default 1 if LMTZ_ADC1_CHANNEL1
+			default 2 if LMTZ_ADC1_CHANNEL2
+			default 3 if LMTZ_ADC1_CHANNEL3
+			default 4 if LMTZ_ADC1_CHANNEL4
+			default 5 if LMTZ_ADC1_CHANNEL5
+			default 6 if LMTZ_ADC1_CHANNEL6
+			default 7 if LMTZ_ADC1_CHANNEL7
+			default -1
+
+		config LMTZ_ADC1_PIN
+			depends on LMTZ_ADC1
+			int 
+			default 36 if LMTZ_ADC1_CHANNEL0
+			default 37 if LMTZ_ADC1_CHANNEL1
+			default 38 if LMTZ_ADC1_CHANNEL2
+			default 39 if LMTZ_ADC1_CHANNEL3
+			default 32 if LMTZ_ADC1_CHANNEL4
+			default 33 if LMTZ_ADC1_CHANNEL5
+			default 34 if LMTZ_ADC1_CHANNEL6
+			default 35 if LMTZ_ADC1_CHANNEL7
+			default -1
+
+# ADC2
+	config LMTZ_ADC2
+		bool
+		prompt "Enable Joystick"
+		default n
+	
+		choice LMTZ_ADC2X_CHANNEL_SELECT
+			depends on LMTZ_ADC2
+			prompt "X Channel"
+			default LMTZ_ADC2X_CHANNEL1
+
+			config LMTZ_ADC2X_CHANNEL0
+			bool "Channel 0, pin 36"
+
+			config LMTZ_ADC2X_CHANNEL1
+			bool "Channel 1, pin 37"
+
+			config LMTZ_ADC2X_CHANNEL2
+			bool "Channel 2, pin 38"
+
+			config LMTZ_ADC2X_CHANNEL3
+			bool "Channel 3, pin 39"
+
+			config LMTZ_ADC2X_CHANNEL4
+			bool "Channel 4, pin 32"
+
+			config LMTZ_ADC2X_CHANNEL5
+			bool "Channel 5, pin 33"
+
+			config LMTZ_ADC2X_CHANNEL6
+			bool "Channel 6, pin 34"
+
+			config LMTZ_ADC2X_CHANNEL7
+			bool "Channel 7, pin 35"
+
+		endchoice
+
+
+		choice LMTZ_ADC2Y_CHANNEL_SELECT
+			depends on LMTZ_ADC2
+			prompt "Y Channel"
+			default LMTZ_ADC2Y_CHANNEL2
+
+			config LMTZ_ADC2Y_CHANNEL0
+			bool "Channel 0, pin 36"
+
+			config LMTZ_ADC2Y_CHANNEL1
+			bool "Channel 1, pin 37"
+
+			config LMTZ_ADC2Y_CHANNEL2
+			bool "Channel 2, pin 38"
+
+			config LMTZ_ADC2Y_CHANNEL3
+			bool "Channel 3, pin 39"
+
+			config LMTZ_ADC2Y_CHANNEL4
+			bool "Channel 4, pin 32"
+
+			config LMTZ_ADC2Y_CHANNEL5
+			bool "Channel 5, pin 33"
+
+			config LMTZ_ADC2Y_CHANNEL6
+			bool "Channel 6, pin 34"
+
+			config LMTZ_ADC2Y_CHANNEL7
+			bool "Channel 7, pin 35"
+		endchoice
+
+
+		choice LMTZ_ADC2_WINDOW_SELECT
+			depends on LMTZ_ADC2
+			prompt "Window mode"
+			default LMTZ_ADC2_WINDOW16
+
+			config LMTZ_ADC2_WINDOW0
+			bool "No sliding window"
+
+			config LMTZ_ADC2_WINDOW4
+			bool "Sliding window (4)"
+
+			config LMTZ_ADC2_WINDOW16
+			bool "Sliding window (16)"
+			
+			config LMTZ_ADC2_WINDOW32
+			bool "Sliding window (32)"
+
+			config LMTZ_ADC2_WINDOW64
+			bool "Sliding window (64)"
+		endchoice
+
+		config LMTZ_ADC2_WINDOW_SIZE
+			depends on LMTZ_ADC2
+			int
+			default 0 if LMTZ_ADC2_WINDOW0
+			default 4 if LMTZ_ADC2_WINDOW4
+			default 16 if LMTZ_ADC2_WINDOW16
+			default 32 if LMTZ_ADC2_WINDOW32
+			default 64 if LMTZ_ADC2_WINDOW64
+			default 16
+
+		config LMTZ_ADC2X_CHANNEL
+			depends on LMTZ_ADC2
+			int
+			default 0 if LMTZ_ADC2X_CHANNEL0
+			default 1 if LMTZ_ADC2X_CHANNEL1
+			default 2 if LMTZ_ADC2X_CHANNEL2
+			default 3 if LMTZ_ADC2X_CHANNEL3
+			default 4 if LMTZ_ADC2X_CHANNEL4
+			default 5 if LMTZ_ADC2X_CHANNEL5
+			default 6 if LMTZ_ADC2X_CHANNEL6
+			default 7 if LMTZ_ADC2X_CHANNEL7
+			default -1
+
+		config LMTZ_ADC2Y_CHANNEL
+			depends on LMTZ_ADC2
+			int 
+			default 0 if LMTZ_ADC2Y_CHANNEL0
+			default 1 if LMTZ_ADC2Y_CHANNEL1
+			default 2 if LMTZ_ADC2Y_CHANNEL2
+			default 3 if LMTZ_ADC2Y_CHANNEL3
+			default 4 if LMTZ_ADC2Y_CHANNEL4
+			default 5 if LMTZ_ADC2Y_CHANNEL5
+			default 6 if LMTZ_ADC2Y_CHANNEL6
+			default 7 if LMTZ_ADC2Y_CHANNEL7
+			default -1
+		
+		config LMTZ_ADC2X_PIN
+			depends on LMTZ_ADC2
+			int 
+			default 36 if LMTZ_ADC2X_CHANNEL0
+			default 37 if LMTZ_ADC2X_CHANNEL1
+			default 38 if LMTZ_ADC2X_CHANNEL2
+			default 39 if LMTZ_ADC2X_CHANNEL3
+			default 32 if LMTZ_ADC2X_CHANNEL4
+			default 33 if LMTZ_ADC2X_CHANNEL5
+			default 34 if LMTZ_ADC2X_CHANNEL6
+			default 35 if LMTZ_ADC2X_CHANNEL7
+			default -1
+
+		config LMTZ_ADC2Y_PIN
+			depends on LMTZ_ADC2
+			int 
+			default 36 if LMTZ_ADC2Y_CHANNEL0
+			default 37 if LMTZ_ADC2Y_CHANNEL1
+			default 38 if LMTZ_ADC2Y_CHANNEL2
+			default 39 if LMTZ_ADC2Y_CHANNEL3
+			default 32 if LMTZ_ADC2Y_CHANNEL4
+			default 33 if LMTZ_ADC2Y_CHANNEL5
+			default 34 if LMTZ_ADC2Y_CHANNEL6
+			default 35 if LMTZ_ADC2Y_CHANNEL7
+			default -1
+
+
+
+endmenu

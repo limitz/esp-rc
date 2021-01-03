@@ -1,4 +1,5 @@
 idf_component_register(SRCS
-		"rc_example.c"
+		"vehicle.c"
+		#"controller.c"
 		INCLUDE_DIRS ".")
 

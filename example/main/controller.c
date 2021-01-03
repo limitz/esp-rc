@@ -1,10 +1,13 @@
 #include <rc.h>
+#include <adc.h>
 #include <nvs_flash.h>
 
+
+static joystick_t j = JOYSTICK;
 static rc_identity_t s_peer = {0};
 
 typedef struct { char string[32]; } pub_payload_t;
-typedef struct { int32_t number;  } pri_payload_t;
+typedef struct { int16_t x; int16_t y; } pri_payload_t;
 
 enum 
 {
@@ -46,8 +49,6 @@ int on_receive(const rc_packet_t* packet)
 			break;
 
 		case PACKET_TYPE_PRIVATE:
-			ESP_LOGW(__func__, "Private packet number: %d", 
-					((pri_payload_t*)packet->payload)->number);
 			break;
 	
 		default:
@@ -74,25 +75,32 @@ void app_main()
 	
 	RC.init();
 
-	for (int i=0; i<1000; i++)
+	adc_init(&j.x);
+	adc_init(&j.y);
+
+	for (;;)
 	{
-		if (0 == (i & 0x07))
-		{
-			RC.advertise();
-		}
+		adc_update(&j.x);
+		adc_update(&j.y);
+
+		
 
 		if (s_peer.connected)
 		{
-			pri_payload_t p = { .number = 13 };
+			pri_payload_t p = { 
+				.x = j.y.result, 
+				.y = j.x.result, 
+			};
 			RC.unicast(s_peer.addr, PACKET_TYPE_PRIVATE, &p, sizeof(p));
 		}
 		else
 		{
-			ESP_LOGI(__func__, "BROADCASTING");
+			RC.advertise();
+			vTaskDelay(200);
 			pub_payload_t p = { .string = "Hello?" };
 			RC.broadcast(PACKET_TYPE_PUBLIC, &p, sizeof(p));
 		}
-		vTaskDelay(200);
+		vTaskDelay(5);
 	}
 
 	RC.deinit();
