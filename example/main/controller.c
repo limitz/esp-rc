@@ -88,7 +88,7 @@ void app_main()
 		if (s_peer.connected)
 		{
 			pri_payload_t p = { 
-				.x = j.y.result, 
+				.x = j.y.result < 800 ? 800 : j.y.result, 
 				.y = j.x.result, 
 			};
 			RC.unicast(s_peer.addr, PACKET_TYPE_PRIVATE, &p, sizeof(p));
